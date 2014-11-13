@@ -3,10 +3,10 @@ package vn.ethicconsultant.common.memcachedpool;
 import java.util.HashMap;
 import java.util.Map;
 import net.spy.memcached.MemcachedClient;
+import net.spy.memcached.compat.log.Logger;
+import net.spy.memcached.compat.log.LoggerFactory;
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.impl.GenericObjectPool;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -18,13 +18,6 @@ public class GenericConnectionProvider implements ConnectionProvider {
 
     public static final Logger logger = LoggerFactory
             .getLogger(GenericConnectionProvider.class);
-    private int maxActive = GenericObjectPool.DEFAULT_MAX_ACTIVE;
-    private int maxIdle = GenericObjectPool.DEFAULT_MAX_IDLE;
-    private int minIdle = GenericObjectPool.DEFAULT_MIN_IDLE;
-    private long maxWait = GenericObjectPool.DEFAULT_MAX_WAIT;
-    private boolean testOnBorrow = GenericObjectPool.DEFAULT_TEST_ON_BORROW;
-    private boolean testOnReturn = GenericObjectPool.DEFAULT_TEST_ON_RETURN;
-    private boolean testWhileIdle = GenericObjectPool.DEFAULT_TEST_WHILE_IDLE;
     private ObjectPool objectPool = null;
     private volatile static GenericConnectionProvider instance = null;
 
@@ -63,25 +56,6 @@ public class GenericConnectionProvider implements ConnectionProvider {
         ((GenericObjectPool) objectPool).setWhenExhaustedAction(poolConfig.whenExhaustedAction);
         MemcachePoolableObjectFactory memcachePoolableObjectFactory = new MemcachePoolableObjectFactory(host, port);
         objectPool.setFactory(memcachePoolableObjectFactory);
-    }
-
-    public GenericConnectionProvider(String host, int port, String bHost, int bPort, int maxPoolSize) {
-        objectPool = setPoolProperties(objectPool, host, port, maxPoolSize);
-    }
-
-    private ObjectPool setPoolProperties(ObjectPool pool, String host, int port, int poolSize) {
-        pool = new GenericObjectPool();
-        System.out.println("Initialize connection pool to server: " + host + " Port: " + port);
-        ((GenericObjectPool) pool).setMaxIdle(poolSize);
-        ((GenericObjectPool) pool).setMinIdle(poolSize);
-        ((GenericObjectPool) pool).setMaxWait(maxWait);
-        ((GenericObjectPool) pool).setTestOnBorrow(testOnBorrow);
-        ((GenericObjectPool) pool).setTestOnReturn(testOnReturn);
-        ((GenericObjectPool) pool).setTestWhileIdle(testWhileIdle);
-        ((GenericObjectPool) pool).setWhenExhaustedAction(GenericObjectPool.WHEN_EXHAUSTED_BLOCK);
-        MemcachePoolableObjectFactory memcachePoolableObjectFactory = new MemcachePoolableObjectFactory(host, port);
-        pool.setFactory(memcachePoolableObjectFactory);
-        return pool;
     }
 
     private void destroy(ObjectPool pool) {
@@ -132,61 +106,6 @@ public class GenericConnectionProvider implements ConnectionProvider {
         }
     }
 
-    public int getMaxActive() {
-        return maxActive;
-    }
-
-    public void setMaxActive(int maxActive) {
-        this.maxActive = maxActive;
-    }
-
-    public int getMaxIdle() {
-        return maxIdle;
-    }
-
-    public void setMaxIdle(int maxIdle) {
-        this.maxIdle = maxIdle;
-    }
-
-    public int getMinIdle() {
-        return minIdle;
-    }
-
-    public void setMinIdle(int minIdle) {
-        this.minIdle = minIdle;
-    }
-
-    public long getMaxWait() {
-        return maxWait;
-    }
-
-    public void setMaxWait(long maxWait) {
-        this.maxWait = maxWait;
-    }
-
-    public boolean isTestOnBorrow() {
-        return testOnBorrow;
-    }
-
-    public void setTestOnBorrow(boolean testOnBorrow) {
-        this.testOnBorrow = testOnBorrow;
-    }
-
-    public boolean isTestOnReturn() {
-        return testOnReturn;
-    }
-
-    public void setTestOnReturn(boolean testOnReturn) {
-        this.testOnReturn = testOnReturn;
-    }
-
-    public boolean isTestWhileIdle() {
-        return testWhileIdle;
-    }
-
-    public void setTestWhileIdle(boolean testWhileIdle) {
-        this.testWhileIdle = testWhileIdle;
-    }
 
     public ObjectPool getObjectPool() {
         return objectPool;
