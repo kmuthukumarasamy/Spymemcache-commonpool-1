@@ -3,7 +3,6 @@ package vn.ethicconsultant.common.memcachedpool;
 import java.util.HashMap;
 import java.util.Map;
 import net.spy.memcached.MemcachedClient;
-import net.spy.memcached.MemcachedConnection;
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.impl.GenericObjectPool;
 import org.slf4j.Logger;
