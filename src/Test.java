@@ -1,4 +1,4 @@
-import vn.ethicconsultant.common.memcachedpool.GenericConnectionProvider;
+import vn.ethicconsultant.common.memcachedpool.MemcachedPool;
 import net.spy.memcached.MemcachedClient;
 import org.apache.commons.pool.impl.GenericObjectPool;
 import org.apache.commons.pool.impl.GenericObjectPool.Config;
@@ -14,8 +14,8 @@ public class Test {
         Config config = new GenericObjectPool.Config();
         config.maxActive = 10;
         config.maxIdle = config.maxActive;
-        GenericConnectionProvider memcachePool
-                = GenericConnectionProvider.getInstance(host, port, config);
+        MemcachedPool memcachePool
+                = MemcachedPool.getInstance(host, port, config);
         MemcachedClient connection = memcachePool.getConnection();
         connection.set("hung", 3600, "deptrai");
         connection.set("hung1", 3600, "deptrai");
